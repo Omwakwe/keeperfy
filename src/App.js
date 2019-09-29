@@ -1,25 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment, useEffect } from 'react';
+import Today from './components/Today';
+import TopNav from './components/layout/TopNav';
+import Footer from './components/layout/Footer';
+// import Home from './components/pages/Home';
+
+import 'materialize-css/dist/css/materialize.min.css';
+import M from 'materialize-css/dist/js/materialize.min.js';
 
 function App() {
+  useEffect(() => {
+    // Init Materialize JS
+    M.AutoInit();
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <TopNav />
+      <Today />
+      <Footer />
+    </Fragment>
   );
 }
 
