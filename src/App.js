@@ -3,6 +3,7 @@ import Today from './components/Today';
 import TopNav from './components/layout/TopNav';
 import Footer from './components/layout/Footer';
 // import Home from './components/pages/Home';
+import ExpenseState from './context/expense/ExpenseState';
 
 import 'materialize-css/dist/css/materialize.min.css';
 import M from 'materialize-css/dist/js/materialize.min.js';
@@ -13,11 +14,13 @@ function App() {
     M.AutoInit();
   });
   return (
-    <Fragment>
-      <TopNav />
-      <Today />
-      <Footer />
-    </Fragment>
+    <ExpenseState>
+      <Fragment>
+        <TopNav />
+        <Today />
+        <Footer />
+      </Fragment>
+    </ExpenseState>
   );
 }
 
