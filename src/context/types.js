@@ -1,6 +1,9 @@
 export const GET_EXPENSES = 'GET_EXPENSES';
 export const ADD_EXPENSE = 'ADD_EXPENSE';
-// export const DELETE_EXPENSE = 'DELETE_EXPENSE';
+export const DELETE_EXPENSE = 'DELETE_EXPENSE';
+
+export const GO_BACK = 'GO_BACK';
+export const GO_FORWARD = 'GO_FORWARD';
 // export const SET_CURRENT = 'SET_CURRENT';
 // export const CLEAR_CURRENT = 'CLEAR_CURRENT';
 // export const UPDATE_EXPENSE = 'UPDATE_EXPENSE';

@@ -17,28 +17,20 @@
   ],
   "expenses": [
     {
-      "id": 1,
-      "user": "Anonymous",
-      "expense": "Breakfast",
-      "category": "Food",
-      "date": "2019-05-31T15:46:10.179Z",
-      "amount": "100"
-    },
-    {
-      "id": 2,
-      "user": "Anonymous",
-      "expense": "Lunch",
-      "category": "Food",
-      "date": "2019-05-31T15:46:10.179Z",
-      "amount": "100"
-    },
-    {
       "id": "04bc4c59-8104-46e2-ac08-94612d2d564c",
       "user": "Anonymous",
       "expense": "Transport",
       "category": "Transport",
       "date": "Mon Sep 30 2019 23:49:03 GMT+0300 (East Africa Time)",
       "amount": "150"
+    },
+    {
+      "id": "41ccd34b-743c-4d06-90ea-a59da3e5c5bc",
+      "user": "Anonymous",
+      "expense": "Breakfast",
+      "category": "Food",
+      "date": "2019-10-01T23:01:43+03:00",
+      "amount": "20"
     }
   ]
 }

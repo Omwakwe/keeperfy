@@ -1,18 +1,84 @@
 import React, { useReducer } from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import ExpenseContext from './expenseContext';
 import expenseReducer from './expenseReducer';
-import { GET_EXPENSES, ADD_EXPENSE, EXPENSE_ERROR } from '../types';
+import {
+  GET_EXPENSES,
+  ADD_EXPENSE,
+  DELETE_EXPENSE,
+  GO_BACK,
+  GO_FORWARD,
+  EXPENSE_ERROR
+} from '../types';
 
 const ContactState = props => {
   const initialState = {
     expenses: null,
     current: null,
     filtered: null,
-    error: null
+    error: null,
+    from_today: 1,
+    yesterday: moment()
+      .subtract(1, 'days')
+      .format(),
+    today: moment().format(),
+    tomorrow: moment()
+      .add(1, 'days')
+      .format()
   };
 
   const [state, dispatch] = useReducer(expenseReducer, initialState);
+
+  const goBack = () => {
+    const new_from_today = state.from_today + 1;
+    const new_yesterday = moment()
+      .subtract(new_from_today, 'days')
+      .format();
+
+    const new_today = moment()
+      .subtract(new_from_today - 1, 'days')
+      .format();
+
+    const new_tomorrow = moment(new_today)
+      .add(1, 'days')
+      .format();
+
+    dispatch({
+      type: GO_BACK,
+      payload: {
+        from_today: new_from_today,
+        new_yesterday: new_yesterday,
+        new_today: new_today,
+        new_tomorrow: new_tomorrow
+      }
+    });
+  };
+
+  const goForward = () => {
+    const new_from_today = state.from_today - 1;
+    const new_yesterday = moment()
+      .subtract(new_from_today, 'days')
+      .format();
+
+    const new_today = moment()
+      .subtract(new_from_today - 1, 'days')
+      .format();
+
+    const new_tomorrow = moment(new_today)
+      .add(1, 'days')
+      .format();
+
+    dispatch({
+      type: GO_FORWARD,
+      payload: {
+        from_today: new_from_today,
+        new_yesterday: new_yesterday,
+        new_today: new_today,
+        new_tomorrow: new_tomorrow
+      }
+    });
+  };
 
   // Get Expenses
   const getExpenses = async () => {
@@ -60,22 +126,22 @@ const ContactState = props => {
     }
   };
 
-  //   // Delete Contact
-  //   const deleteContact = async id => {
-  //     try {
-  //       await axios.delete(`/api/contacts/${id}`);
+  // Delete Contact
+  const deleteExpense = async id => {
+    try {
+      await axios.delete(`http://localhost:5000/expenses/${id}`);
 
-  //       dispatch({
-  //         type: DELETE_CONTACT,
-  //         payload: id
-  //       });
-  //     } catch (err) {
-  //       dispatch({
-  //         type: CONTACT_ERROR,
-  //         payload: err.response.msg
-  //       });
-  //     }
-  //   };
+      dispatch({
+        type: DELETE_EXPENSE,
+        payload: id
+      });
+    } catch (err) {
+      dispatch({
+        type: EXPENSE_ERROR,
+        payload: err.response.msg
+      });
+    }
+  };
 
   //   // Update Contact
   //   const updateContact = async contact => {
@@ -136,8 +202,15 @@ const ContactState = props => {
         current: state.current,
         filtered: state.filtered,
         error: state.error,
+        from_today: state.from_today,
+        yesterday: state.yesterday,
+        today: state.today,
+        tomorrow: state.tomorrow,
         getExpenses,
-        addExpense
+        addExpense,
+        goBack,
+        goForward,
+        deleteExpense
       }}
     >
       {props.children}

@@ -1,12 +1,23 @@
 import React, { useState, useContext, useEffect } from 'react';
 import uuid from 'uuid';
+import moment from 'moment';
 import ExpenseContext from '../context/expense/expenseContext';
+import ExpenseRow from './pages/ExpenseRow';
 // import Preloader from './layout/Preloader';
-import Example from './pages/SampleChart';
+// import Example from './pages/SampleChart';
 
 const Today = () => {
   const expenseContext = useContext(ExpenseContext);
-  const { expenses, getExpenses, addExpense } = expenseContext;
+  const {
+    expenses,
+    yesterday,
+    today,
+    tomorrow,
+    getExpenses,
+    addExpense,
+    goBack,
+    goForward
+  } = expenseContext;
 
   useEffect(() => {
     getExpenses();
@@ -17,11 +28,11 @@ const Today = () => {
   const [category, setCategory] = useState('');
   const [item, setItem] = useState('');
 
-  // const [expenses, setExpenses] = useState([
-  //   { id: 1, category: 'Transport', expense: 'Morning commute', amount: 80 },
-  //   { id: 2, category: 'Food', expense: 'Breakfirst', amount: 80 },
-  //   { id: 3, category: 'House', expense: 'Shopping', amount: 80 }
-  // ]);
+  const disabled = amount === '' || item === '' || category === '';
+
+  const back = () => {
+    goBack();
+  };
 
   const onSubmit = e => {
     e.preventDefault();
@@ -30,7 +41,7 @@ const Today = () => {
       user: 'Anonymous',
       expense: item,
       category: category,
-      date: Date(),
+      date: moment().format(),
       amount: amount
     };
     const new_state = [...expenses, new_expense];
@@ -51,8 +62,7 @@ const Today = () => {
       <div className='section no-pad-bot' id='index-banner'>
         <div className='container'>
           <h3 className='header center orange-text'>Enter an Expense</h3>
-          <p className='center'>Sunday, 29 September</p>
-          <Example />
+          <p className='center'>{moment(today).format('MMMM Do YYYY')}</p>
           <form onSubmit={onSubmit}>
             <div style={{ border: '1px solid gainsboro', padding: '10px' }}>
               <div className='row'>
@@ -107,60 +117,66 @@ const Today = () => {
                     type='submit'
                     value='Save'
                     className='btn btn-primary btn-block'
+                    disabled={disabled}
                   />
                 </div>
               </div>
             </div>
-
-            {/* <hr /> */}
-
-            <div className='row'>
-              <div className=' col s12'>
-                <table className='striped responsive-table'>
-                  <thead>
-                    <tr>
-                      <th>Category</th>
-                      <th>Item Name</th>
-                      <th>Item Price</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {expenses !== null ? (
-                      expenses.map(expense => (
-                        <tr key={expense.id}>
-                          <td>{expense.category}</td>
-                          <td>{expense.expense}</td>
-                          <td>Ksh. {expense.amount}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan='4'>No expenses added yet</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </form>
+          <div className='row'>
+            <div className=' col s12'>
+              <table className='striped responsive-table'>
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Item Name</th>
+                    <th>Item Price</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {expenses !== null && expenses.length === 0 && (
+                    <tr>
+                      <td colSpan='4'>No expenses added yet</td>
+                    </tr>
+                  )}
+                  {expenses !== null ? (
+                    expenses.map(expense => (
+                      <ExpenseRow key={expense.id} expense={expense} />
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan='4'>Loading ...</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           <div className='row'>
             <div className=' col s6'>
+              <span>{moment(yesterday).format('MMMM Do YYYY')}</span>
               <a
                 href='#!'
                 id='yesterday'
                 className='btn waves-effect waves-light blue'
+                onClick={back}
               >
                 <i className='material-icons left'>keyboard_backspace</i>
                 Yesterday
               </a>
             </div>
             <div className=' col s6'>
+              <span className='right'>
+                {moment(tomorrow).format('MMMM Do YYYY')}
+              </span>
               <a
                 href='#!'
                 id='Tomorrow'
-                className='btn waves-effect waves-light blue right disabled'
+                className='btn waves-effect waves-light blue right '
+                onClick={goForward}
               >
                 <i className='material-icons right'>arrow_right_alt</i>
                 Tomorrow
