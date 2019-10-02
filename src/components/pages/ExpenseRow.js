@@ -1,18 +1,18 @@
 import React, { useContext } from 'react';
 import ExpenseContext from '../../context/expense/expenseContext';
 
-const ExpenseRow = ({ expense: { id }, expense }) => {
+const ExpenseRow = ({ expense: { _id }, expense }) => {
   const expenseContext = useContext(ExpenseContext);
 
   const { deleteExpense } = expenseContext;
 
   const onDelete = () => {
-    console.log('expense', id);
-    deleteExpense(id);
+    // console.log('expense', id);
+    deleteExpense(_id);
   };
 
   return (
-    <tr key={id}>
+    <tr key={_id}>
       <td>{expense.category}</td>
       <td>{expense.expense}</td>
       <td>Ksh. {expense.amount}</td>

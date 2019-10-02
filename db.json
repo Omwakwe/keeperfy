@@ -31,6 +31,13 @@
       "category": "Food",
       "date": "2019-10-01T23:01:43+03:00",
       "amount": "20"
+    },
+    {
+      "user": "Anonymous",
+      "expense": "Transport",
+      "category": "Transport",
+      "amount": "150",
+      "id": "xD9Ro_5"
     }
   ]
 }

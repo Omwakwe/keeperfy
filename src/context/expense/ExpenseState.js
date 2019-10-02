@@ -83,13 +83,15 @@ const ContactState = props => {
   // Get Expenses
   const getExpenses = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/expenses');
+      // const res = await axios.get('http://127.0.0.1:6000/api/expenses');
+      const res = await axios.get('api/expenses');
       console.log('res.data', res.data);
       dispatch({
         type: GET_EXPENSES,
         payload: res.data
       });
     } catch (err) {
+      console.log('getExpenses err', err);
       dispatch({
         type: EXPENSE_ERROR,
         payload: err.response.msg
@@ -106,11 +108,7 @@ const ContactState = props => {
     };
 
     try {
-      const res = await axios.post(
-        'http://localhost:5000/expenses',
-        expense,
-        config
-      );
+      const res = await axios.post('api/expenses', expense, config);
 
       console.log('res.data', res.data);
 

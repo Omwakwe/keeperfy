@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import uuid from 'uuid';
+// import uuid from 'uuid';
 import moment from 'moment';
 import ExpenseContext from '../context/expense/expenseContext';
 import ExpenseRow from './pages/ExpenseRow';
@@ -20,9 +20,10 @@ const Today = () => {
   } = expenseContext;
 
   useEffect(() => {
+    console.log('getExpenses call');
     getExpenses();
     // eslint-disable-next-line
-  }, []);
+  }, [today]);
 
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
@@ -34,14 +35,22 @@ const Today = () => {
     goBack();
   };
 
+  const alltomorrow = tomorrow > moment().format();
+
   const onSubmit = e => {
     e.preventDefault();
+    // const new_expense = {
+    //   id: uuid(),
+    //   user: 'Anonymous',
+    //   expense: item,
+    //   category: category,
+    //   date: moment().format(),
+    //   amount: amount
+    // };
     const new_expense = {
-      id: uuid(),
       user: 'Anonymous',
       expense: item,
       category: category,
-      date: moment().format(),
       amount: amount
     };
     const new_state = [...expenses, new_expense];
@@ -143,7 +152,7 @@ const Today = () => {
                   )}
                   {expenses !== null ? (
                     expenses.map(expense => (
-                      <ExpenseRow key={expense.id} expense={expense} />
+                      <ExpenseRow key={expense._id} expense={expense} />
                     ))
                   ) : (
                     <tr>
@@ -177,6 +186,7 @@ const Today = () => {
                 id='Tomorrow'
                 className='btn waves-effect waves-light blue right '
                 onClick={goForward}
+                disabled={alltomorrow}
               >
                 <i className='material-icons right'>arrow_right_alt</i>
                 Tomorrow
