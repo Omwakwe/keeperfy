@@ -13,8 +13,8 @@ app.use(express.json({ extended: false }));
 app.get('/', (req, res) => res.send('Send from the server'));
 
 // Define Routes
-// app.use('/api/users', require('./routes/users'));
-// app.use('/api/auth', require('./routes/auth'));
+app.use('/api/users', require('./routes/users'));
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/expenses', require('./routes/expenses'));
 
 // Serve static assets in production
@@ -27,6 +27,6 @@ if (process.env.NODE_ENV === 'production') {
   );
 }
 
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
