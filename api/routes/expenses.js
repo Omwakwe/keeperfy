@@ -11,9 +11,17 @@ const Expense = require('../models/Expense');
 // @access    Private
 router.get('/', auth, async (req, res) => {
   try {
-    const expenses = await Expense.find({ user: req.user.id }).sort({
-      date: -1
-    });
+    const resPerPage = 5; // results per page
+    const page = req.params.page || 1; // Page
+    const expenses = await Expense.find({ user: req.user.id })
+      .sort({
+        date: -1
+      })
+      .skip(resPerPage * page - resPerPage)
+      .limit(resPerPage);
+    const numOfExpenses = await Expense.count({ user: req.user.id });
+    const pages = Math.ceil(numOfExpenses / resPerPage);
+
     res.json(expenses);
   } catch (err) {
     console.error(err.message);

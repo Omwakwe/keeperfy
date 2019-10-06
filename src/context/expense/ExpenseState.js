@@ -118,7 +118,7 @@ const ExpenseState = props => {
         config
       );
 
-      console.log('res.data', res.data);
+      // console.log('res.data', res.data);
 
       dispatch({
         type: ADD_EXPENSE,
