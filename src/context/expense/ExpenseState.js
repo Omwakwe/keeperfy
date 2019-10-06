@@ -9,10 +9,14 @@ import {
   DELETE_EXPENSE,
   GO_BACK,
   GO_FORWARD,
+  CLEAR_EXPENSES,
+  SET_CURRENT,
+  UPDATE_EXPENSE,
+  CLEAR_CURRENT,
   EXPENSE_ERROR
 } from '../types';
 
-const ContactState = props => {
+const ExpenseState = props => {
   const initialState = {
     expenses: null,
     current: null,
@@ -85,13 +89,13 @@ const ContactState = props => {
     try {
       // const res = await axios.get('http://127.0.0.1:6000/api/expenses');
       const res = await axios.get('api/expenses');
-      console.log('res.data', res.data);
+      // console.log('res.data', res.data);
       dispatch({
         type: GET_EXPENSES,
         payload: res.data
       });
     } catch (err) {
-      console.log('getExpenses err', err);
+      // console.log('getExpenses err', err);
       dispatch({
         type: EXPENSE_ERROR,
         payload: err.response.msg
@@ -108,7 +112,11 @@ const ContactState = props => {
     };
 
     try {
-      const res = await axios.post('api/expenses', expense, config);
+      const res = await axios.post(
+        'http://localhost:3000/api/expenses',
+        expense,
+        config
+      );
 
       console.log('res.data', res.data);
 
@@ -117,6 +125,7 @@ const ContactState = props => {
         payload: res.data
       });
     } catch (err) {
+      console.log('err', err.response);
       dispatch({
         type: EXPENSE_ERROR,
         payload: err.response.msg
@@ -124,16 +133,17 @@ const ContactState = props => {
     }
   };
 
-  // Delete Contact
+  // Delete Expense
   const deleteExpense = async id => {
     try {
-      await axios.delete(`http://localhost:5000/expenses/${id}`);
+      await axios.delete(`http://localhost:3000/api/expenses/${id}`);
 
       dispatch({
         type: DELETE_EXPENSE,
         payload: id
       });
     } catch (err) {
+      console.log('err', err.response);
       dispatch({
         type: EXPENSE_ERROR,
         payload: err.response.msg
@@ -141,47 +151,48 @@ const ContactState = props => {
     }
   };
 
-  //   // Update Contact
-  //   const updateContact = async contact => {
-  //     const config = {
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       }
-  //     };
+  // Update Expense
+  const updateExpense = async expense => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
 
-  //     try {
-  //       const res = await axios.put(
-  //         `/api/contacts/${contact._id}`,
-  //         contact,
-  //         config
-  //       );
+    try {
+      const res = await axios.put(
+        `/api/expenses/${expense._id}`,
+        expense,
+        config
+      );
 
-  //       dispatch({
-  //         type: UPDATE_CONTACT,
-  //         payload: res.data
-  //       });
-  //     } catch (err) {
-  //       dispatch({
-  //         type: CONTACT_ERROR,
-  //         payload: err.response.msg
-  //       });
-  //     }
-  //   };
+      dispatch({
+        type: UPDATE_EXPENSE,
+        payload: res.data
+      });
+    } catch (err) {
+      console.log('err', err.response);
+      dispatch({
+        type: EXPENSE_ERROR,
+        payload: err.response.msg
+      });
+    }
+  };
 
-  //   // Clear Contacts
-  //   const clearContacts = () => {
-  //     dispatch({ type: CLEAR_CONTACTS });
-  //   };
+  // Clear Expenses
+  const clearExpenses = () => {
+    dispatch({ type: CLEAR_EXPENSES });
+  };
 
-  //   // Set Current Contact
-  //   const setCurrent = contact => {
-  //     dispatch({ type: SET_CURRENT, payload: contact });
-  //   };
+  // Set Current Expense
+  const setCurrent = expense => {
+    dispatch({ type: SET_CURRENT, payload: expense });
+  };
 
-  //   // Clear Current Contact
-  //   const clearCurrent = () => {
-  //     dispatch({ type: CLEAR_CURRENT });
-  //   };
+  // Clear Current Expense
+  const clearCurrent = () => {
+    dispatch({ type: CLEAR_CURRENT });
+  };
 
   //   // Filter Contacts
   //   const filterContacts = text => {
@@ -208,7 +219,11 @@ const ContactState = props => {
         addExpense,
         goBack,
         goForward,
-        deleteExpense
+        deleteExpense,
+        clearExpenses,
+        updateExpense,
+        clearCurrent,
+        setCurrent
       }}
     >
       {props.children}
@@ -216,4 +231,4 @@ const ContactState = props => {
   );
 };
 
-export default ContactState;
+export default ExpenseState;

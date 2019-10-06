@@ -1,23 +1,27 @@
 import React, { Fragment, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../../context/auth/authContext';
+import ExpenseContext from '../../context/expense/expenseContext';
 
 const TopNav = () => {
   const authContext = useContext(AuthContext);
+  const expenseContext = useContext(ExpenseContext);
 
-  const { isAuthenticated, user } = authContext;
+  const { isAuthenticated, user, logout } = authContext;
 
   const onLogout = e => {
-    console.log('logout click');
-    // logout();
-    // clearContacts();
+    // console.log('logout click');
+    logout();
+    expenseContext.clearExpenses();
   };
 
   const authLinks = (
     <Fragment>
       <li>Hello {user && user.name}</li>
       <li>
-        <a href='#!'>Currencies</a>
+        <a onClick={onLogout} href='#!'>
+          Logout
+        </a>
       </li>
       <li>
         <a href='#!'>Categories</a>
@@ -27,8 +31,8 @@ const TopNav = () => {
       </li>
       <li>
         <a onClick={onLogout} href='#!'>
-          <i className='fas fa-sign-out-alt' />{' '}
-          <span className='hide-sm'>Logout</span>
+          <i className='fas fa-sign-out-alt' /> Logout
+          {/* <span className='hide-sm'>Logout</span> */}
         </a>
       </li>
     </Fragment>
@@ -55,15 +59,7 @@ const TopNav = () => {
           {isAuthenticated ? authLinks : guestLinks}
         </ul>
         <ul id='nav-mobile' className='sidenav'>
-          <li>
-            <a href='#!'>Currencies</a>
-          </li>
-          <li>
-            <a href='#!'>Categories</a>
-          </li>
-          <li>
-            <a href='#!'>Settings</a>
-          </li>
+          {isAuthenticated ? authLinks : guestLinks}
         </ul>
         <a href='#!' data-target='nav-mobile' className='sidenav-trigger'>
           <i className='material-icons'>menu</i>

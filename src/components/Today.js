@@ -1,13 +1,16 @@
 import React, { useState, useContext, useEffect } from 'react';
-// import uuid from 'uuid';
 import moment from 'moment';
 import ExpenseContext from '../context/expense/expenseContext';
+import AuthContext from '../context/auth/authContext';
 import ExpenseRow from './pages/ExpenseRow';
 // import Preloader from './layout/Preloader';
 // import Example from './pages/SampleChart';
+// import M from 'materialize-css/dist/js/materialize.min.js';
 
 const Today = () => {
   const expenseContext = useContext(ExpenseContext);
+  const authContext = useContext(AuthContext);
+
   const {
     expenses,
     yesterday,
@@ -15,19 +18,33 @@ const Today = () => {
     tomorrow,
     getExpenses,
     addExpense,
+    current,
     goBack,
+    updateExpense,
+    clearCurrent,
     goForward
   } = expenseContext;
 
   useEffect(() => {
     console.log('getExpenses call');
     getExpenses();
+    authContext.loadUser();
+    if (current !== null) {
+      setAmount(current.amount);
+      setCategory(current.category);
+      setItem(current.expense);
+    } else {
+      setAmount('');
+      setCategory('');
+      setItem('');
+    }
     // eslint-disable-next-line
-  }, [today]);
+  }, [today, current]);
 
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState('');
   const [item, setItem] = useState('');
+  // const [edit, setEdit] = useState(false);
 
   const disabled = amount === '' || item === '' || category === '';
 
@@ -39,24 +56,23 @@ const Today = () => {
 
   const onSubmit = e => {
     e.preventDefault();
-    // const new_expense = {
-    //   id: uuid(),
-    //   user: 'Anonymous',
-    //   expense: item,
-    //   category: category,
-    //   date: moment().format(),
-    //   amount: amount
-    // };
     const new_expense = {
-      user: 'Anonymous',
+      // user: 'Anonymous',
       expense: item,
       category: category,
       amount: amount
     };
-    const new_state = [...expenses, new_expense];
-    console.log('new_state', new_state);
+    // const new_state = [...expenses, new_expense];
+    // console.log('new_state', new_state);
     // setExpenses([...expenses, new_expense]);
-    addExpense(new_expense);
+    if (current === null) {
+      addExpense(new_expense);
+    } else {
+      new_expense._id = current._id;
+      updateExpense(new_expense);
+      clearCurrent();
+    }
+
     clearForm();
   };
 
@@ -70,7 +86,9 @@ const Today = () => {
     <div>
       <div className='section no-pad-bot' id='index-banner'>
         <div className='container'>
-          <h3 className='header center orange-text'>Enter an Expense</h3>
+          <h3 className='header center orange-text'>
+            {current ? 'Edit' : 'Enter an Expense'}
+          </h3>
           <p className='center'>{moment(today).format('MMMM Do YYYY')}</p>
           <form onSubmit={onSubmit}>
             <div style={{ border: '1px solid gainsboro', padding: '10px' }}>
@@ -96,7 +114,7 @@ const Today = () => {
                     required
                     onChange={e => setItem(e.target.value)}
                   />
-                  <label htmlFor='message' className='active'>
+                  <label htmlFor='item' className='active'>
                     Item Name
                   </label>
                 </div>
@@ -124,7 +142,7 @@ const Today = () => {
                 <div className=' col s12'>
                   <input
                     type='submit'
-                    value='Save'
+                    value={current ? 'Update' : 'Save'}
                     className='btn btn-primary btn-block'
                     disabled={disabled}
                   />
@@ -141,6 +159,7 @@ const Today = () => {
                     <th>Item Name</th>
                     <th>Item Price</th>
                     <th>Delete</th>
+                    <th>Edit</th>
                   </tr>
                 </thead>
 

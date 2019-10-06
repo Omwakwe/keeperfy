@@ -4,6 +4,10 @@ import {
   DELETE_EXPENSE,
   GO_BACK,
   GO_FORWARD,
+  CLEAR_EXPENSES,
+  SET_CURRENT,
+  UPDATE_EXPENSE,
+  CLEAR_CURRENT,
   EXPENSE_ERROR
 } from '../types';
 
@@ -39,40 +43,40 @@ export default (state, action) => {
         from_today: action.payload.from_today,
         loading: false
       };
-    //   case UPDATE_CONTACT:
-    //     return {
-    //       ...state,
-    //       contacts: state.contacts.map(contact =>
-    //         contact._id === action.payload._id ? action.payload : contact
-    //       ),
-    //       loading: false
-    //     };
+    case UPDATE_EXPENSE:
+      return {
+        ...state,
+        expenses: state.expenses.map(expense =>
+          expense._id === action.payload._id ? action.payload : expense
+        ),
+        loading: false
+      };
     case DELETE_EXPENSE:
       return {
         ...state,
         expenses: state.expenses.filter(
-          expense => expense.id !== action.payload
+          expense => expense._id !== action.payload
         ),
         loading: false
       };
-    //   case CLEAR_CONTACTS:
-    //     return {
-    //       ...state,
-    //       contacts: null,
-    //       filtered: null,
-    //       error: null,
-    //       current: null
-    //     };
-    //   case SET_CURRENT:
-    //     return {
-    //       ...state,
-    //       current: action.payload
-    //     };
-    //   case CLEAR_CURRENT:
-    //     return {
-    //       ...state,
-    //       current: null
-    //     };
+    case CLEAR_EXPENSES:
+      return {
+        ...state,
+        expenses: null,
+        filtered: null,
+        error: null,
+        current: null
+      };
+    case SET_CURRENT:
+      return {
+        ...state,
+        current: action.payload
+      };
+    case CLEAR_CURRENT:
+      return {
+        ...state,
+        current: null
+      };
     //   case FILTER_CONTACTS:
     //     return {
     //       ...state,

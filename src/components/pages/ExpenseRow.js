@@ -4,11 +4,16 @@ import ExpenseContext from '../../context/expense/expenseContext';
 const ExpenseRow = ({ expense: { _id }, expense }) => {
   const expenseContext = useContext(ExpenseContext);
 
-  const { deleteExpense } = expenseContext;
+  const { deleteExpense, setCurrent } = expenseContext;
 
   const onDelete = () => {
     // console.log('expense', id);
     deleteExpense(_id);
+  };
+
+  const onSetCurrent = e => {
+    e.preventDefault();
+    setCurrent(expense);
   };
 
   return (
@@ -19,6 +24,11 @@ const ExpenseRow = ({ expense: { _id }, expense }) => {
       <td>
         <button className='btn btn-danger btn-sm' onClick={onDelete}>
           Delete
+        </button>
+      </td>
+      <td>
+        <button className='btn btn-danger btn-sm' onClick={onSetCurrent}>
+          Edit
         </button>
       </td>
     </tr>

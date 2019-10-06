@@ -5,8 +5,12 @@ import TopNav from './components/layout/TopNav';
 import Footer from './components/layout/Footer';
 import Home from './components/pages/Home';
 import Signup from './components/Auth/Signup';
+import Login from './components/Auth/Login';
+import PrivateRoute from './components/routing/PrivateRoute';
+
 import ExpenseState from './context/expense/ExpenseState';
 import AuthState from './context/auth/AuthState';
+import setAuthToken from './utils/setAuthToken';
 
 import 'materialize-css/dist/css/materialize.min.css';
 import M from 'materialize-css/dist/js/materialize.min.js';
@@ -18,6 +22,10 @@ import M from 'materialize-css/dist/js/materialize.min.js';
 //     </Fragment>
 //   );
 // };
+
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+}
 
 function App() {
   useEffect(() => {
@@ -31,9 +39,11 @@ function App() {
           <Fragment>
             <TopNav />
             <Switch>
-              <Route exact path='/' component={Today} />
+              <PrivateRoute exact path='/' component={Today} />
+              {/* <Route exact path='/' component={Today} /> */}
               <Route exact path='/about' component={Home} />
               <Route exact path='/signup' component={Signup} />
+              <Route exact path='/login' component={Login} />
             </Switch>
             <Footer />
           </Fragment>
