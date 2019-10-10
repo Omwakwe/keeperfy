@@ -23,6 +23,7 @@ const ExpenseState = props => {
     filtered: null,
     error: null,
     from_today: 1,
+    numOfExpenses: 0,
     yesterday: moment()
       .subtract(1, 'days')
       .format(),
@@ -85,10 +86,16 @@ const ExpenseState = props => {
   };
 
   // Get Expenses
-  const getExpenses = async () => {
+  const getExpenses = async (activePage, today) => {
     try {
       // const res = await axios.get('http://127.0.0.1:6000/api/expenses');
-      const res = await axios.get('api/expenses');
+      // console.log('getExpenses activePage ', activePage);
+      const res = await axios.get('api/expenses', {
+        params: {
+          page: activePage,
+          today: today
+        }
+      });
       // console.log('res.data', res.data);
       dispatch({
         type: GET_EXPENSES,
@@ -215,6 +222,7 @@ const ExpenseState = props => {
         yesterday: state.yesterday,
         today: state.today,
         tomorrow: state.tomorrow,
+        numOfExpenses: state.numOfExpenses,
         getExpenses,
         addExpense,
         goBack,

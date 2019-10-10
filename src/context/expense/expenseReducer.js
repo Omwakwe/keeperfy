@@ -16,7 +16,8 @@ export default (state, action) => {
     case GET_EXPENSES:
       return {
         ...state,
-        expenses: action.payload,
+        expenses: action.payload.expenses,
+        numOfExpenses: action.payload.numOfExpenses,
         loading: false
       };
     case ADD_EXPENSE:

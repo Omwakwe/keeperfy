@@ -12,17 +12,20 @@ const Expense = require('../models/Expense');
 router.get('/', auth, async (req, res) => {
   try {
     const resPerPage = 5; // results per page
-    const page = req.params.page || 1; // Page
-    const expenses = await Expense.find({ user: req.user.id })
+    const page = req.query.page || 1; // Page
+    const today = req.query.today;
+    console.log('req.query ', req.query);
+    const expenses = await Expense.find({ user: req.user.id, date: today })
       .sort({
         date: -1
       })
       .skip(resPerPage * page - resPerPage)
       .limit(resPerPage);
-    const numOfExpenses = await Expense.count({ user: req.user.id });
-    const pages = Math.ceil(numOfExpenses / resPerPage);
+    const numOfExpenses = await Expense.countDocuments({ user: req.user.id });
+    // const pages = Math.ceil(numOfExpenses / resPerPage);
 
-    res.json(expenses);
+    res.json({ expenses, numOfExpenses });
+    // res.status(200).json({ expenses, numOfExpenses });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

@@ -6,10 +6,19 @@ import ExpenseRow from './pages/ExpenseRow';
 // import Preloader from './layout/Preloader';
 // import Example from './pages/SampleChart';
 // import M from 'materialize-css/dist/js/materialize.min.js';
+import Pagination from 'react-js-pagination';
+import DatePicker from 'react-datepicker';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 const Today = () => {
   const expenseContext = useContext(ExpenseContext);
   const authContext = useContext(AuthContext);
+  const [activePage, setActivePage] = useState(1);
+  const [amount, setAmount] = useState(0);
+  const [category, setCategory] = useState('');
+  const [item, setItem] = useState('');
+  const [startDate, setStartDate] = useState(new Date());
 
   const {
     expenses,
@@ -19,6 +28,7 @@ const Today = () => {
     getExpenses,
     addExpense,
     current,
+    numOfExpenses,
     goBack,
     updateExpense,
     clearCurrent,
@@ -26,8 +36,8 @@ const Today = () => {
   } = expenseContext;
 
   useEffect(() => {
-    console.log('getExpenses call');
-    getExpenses();
+    // console.log('getExpenses call');
+    getExpenses(activePage, today);
     authContext.loadUser();
     if (current !== null) {
       setAmount(current.amount);
@@ -39,12 +49,9 @@ const Today = () => {
       setItem('');
     }
     // eslint-disable-next-line
-  }, [today, current]);
+  }, [today, current, activePage]);
 
-  const [amount, setAmount] = useState(0);
-  const [category, setCategory] = useState('');
-  const [item, setItem] = useState('');
-  // const [edit, setEdit] = useState(false);
+  // const [totalItemsCount, setTotalItemsCount] = useState(50);
 
   const disabled = amount === '' || item === '' || category === '';
 
@@ -82,6 +89,16 @@ const Today = () => {
     setItem('');
   };
 
+  const handlePageChange = pageNumber => {
+    console.log(`active page is ${pageNumber}`);
+    setActivePage(pageNumber);
+  };
+
+  const handleDateChange = newDate => {
+    console.log(`newDate is ${newDate}`);
+    setStartDate(newDate);
+  };
+
   return (
     <div>
       <div className='section no-pad-bot' id='index-banner'>
@@ -89,6 +106,7 @@ const Today = () => {
           <h3 className='header center orange-text'>
             {current ? 'Edit' : 'Enter an Expense'}
           </h3>
+
           <p className='center'>{moment(today).format('MMMM Do YYYY')}</p>
           <form onSubmit={onSubmit}>
             <div style={{ border: '1px solid gainsboro', padding: '10px' }}>
@@ -166,7 +184,9 @@ const Today = () => {
                 <tbody>
                   {expenses !== null && expenses.length === 0 && (
                     <tr>
-                      <td colSpan='4'>No expenses added yet</td>
+                      <td colSpan='6' style={{ textAlign: 'center' }}>
+                        No expenses added yet
+                      </td>
                     </tr>
                   )}
                   {expenses !== null ? (
@@ -175,17 +195,27 @@ const Today = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan='4'>Loading ...</td>
+                      <td colSpan='6'>Loading ...</td>
                     </tr>
                   )}
                 </tbody>
               </table>
+              {numOfExpenses > 0 ? (
+                <div>
+                  <Pagination
+                    activePage={activePage}
+                    itemsCountPerPage={5}
+                    totalItemsCount={numOfExpenses}
+                    pageRangeDisplayed={5}
+                    onChange={handlePageChange}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
 
           <div className='row'>
-            <div className=' col s6'>
-              <span>{moment(yesterday).format('MMMM Do YYYY')}</span>
+            <div className=' col s12 l4'>
               <a
                 href='#!'
                 id='yesterday'
@@ -193,13 +223,14 @@ const Today = () => {
                 onClick={back}
               >
                 <i className='material-icons left'>keyboard_backspace</i>
-                Yesterday
+                Yesterday (
+                <span>{moment(yesterday).format('MMMM Do YYYY')}</span>)
               </a>
             </div>
-            <div className=' col s6'>
-              <span className='right'>
-                {moment(tomorrow).format('MMMM Do YYYY')}
-              </span>
+            <div className=' col s12 l4'>
+              <DatePicker selected={startDate} onChange={handleDateChange} />
+            </div>
+            <div className=' col s12 l4'>
               <a
                 href='#!'
                 id='Tomorrow'
@@ -208,7 +239,8 @@ const Today = () => {
                 disabled={alltomorrow}
               >
                 <i className='material-icons right'>arrow_right_alt</i>
-                Tomorrow
+                Tomorrow (<span>{moment(tomorrow).format('MMMM Do YYYY')}</span>
+                )
               </a>
             </div>
           </div>
