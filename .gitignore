@@ -22,4 +22,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/api/config
+/api/config/default.json
+/api/config/production.json
+db.json
