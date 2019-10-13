@@ -201,16 +201,6 @@ const ExpenseState = props => {
     dispatch({ type: CLEAR_CURRENT });
   };
 
-  //   // Filter Contacts
-  //   const filterContacts = text => {
-  //     dispatch({ type: FILTER_CONTACTS, payload: text });
-  //   };
-
-  //   // Clear Filter
-  //   const clearFilter = () => {
-  //     dispatch({ type: CLEAR_FILTER });
-  //   };
-
   return (
     <ExpenseContext.Provider
       value={{
